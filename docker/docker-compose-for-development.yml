@@ -1,0 +1,67 @@
+version: "3"
+networks:
+  backend-network:
+    driver: bridge
+services:
+  configserver:
+    container_name: config-server
+    restart: always
+    image: hyness/spring-cloud-config-server:3.0.2-jdk11
+    ports:
+          - 8888:8888
+    volumes:
+          - ./../config-server/src/main/resources:/config
+          - ./../config:/my-local-git-repo
+    environment:
+          SPRING_CLOUD_CONFIG_SERVER_GIT_URI: file:/my-local-git-repo
+    networks:
+          - backend-network
+          
+  eurekaserver:
+    container_name: eureka-server
+    restart: always
+    image: eureka-server:0.1
+    depends_on:
+            - configserver
+    ports:
+            - 8761:8761
+    volumes:
+            - ./../eureka-server/target:/deployments
+    environment:
+            CONFIG_SERVER_URL: http://config-server:8888
+    networks:
+            - backend-network
+            
+  customerservice:
+    container_name: customer-service
+    image: openjdk:11.0.10-jre-slim-buster
+    restart: on-failure:5
+    stdin_open: true
+    tty: true
+    depends_on:
+        - configserver
+    ports:
+        - 8800:8800
+    volumes:
+        - ./../customer/target:/deployments
+    environment:
+        CONFIG_SERVER_URL: http://config-server:8888
+    networks:
+        - backend-network
+            
+  orderservice:
+    container_name: order-service
+    image: openjdk:11.0.10-jre-slim-buster
+    restart: on-failure:5
+    stdin_open: true
+    tty: true
+    depends_on:
+          - configserver
+    ports:
+          - 8801:8801
+    volumes:
+         - ./../order/target:/deployments/
+    environment:
+            CONFIG_SERVER_URL: http://config-server:8888
+    networks:
+            - backend-network
