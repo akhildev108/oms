@@ -12,7 +12,7 @@ Order service is used to perform CRUD opearions on Order resource.
 
 Pre-requisites:
 ------------------
-1. Docker Emgine and Docker CLI (e.g Docker for Desktop for Windows and Mac)
+1. Docker Engine and Docker CLI (e.g Docker for Desktop for Windows and Mac)
 2. Powershell for running docker commands
 3. Postman or Insomnia or curl or similar utility to access Customer and Order REST APIs
 
