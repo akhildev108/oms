@@ -1,4 +1,4 @@
-Order Manaement System:
+Order Management System:
 --------------------------------------
 This application currently consists of 4 microservices (config-server, eureka-server, customerservice, orderservice).
 Communication between customerservice and orderservice occurs over HTTP/REST. 
